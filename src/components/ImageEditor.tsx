@@ -168,6 +168,17 @@ export default function ImageEditor() {
     }))
   ]
 
+  // Helper function to get selected layer
+  const getSelectedLayer = () => {
+    return textLayers.find(l => l.id === selectedLayer)
+  }
+
+  // Helper function to get layer value with fallback
+  const getLayerValue = (key: keyof TextLayer) => {
+    const layer = getSelectedLayer()
+    return layer ? layer[key] : null
+  }
+
   return (
     <div id="image-editor" className="p-8 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl shadow-2xl scroll-mt-20">
       <h2 className="text-3xl font-bold text-white mb-8 flex items-center">
@@ -289,15 +300,15 @@ export default function ImageEditor() {
                   <label className="block text-gray-300 mb-2 text-sm font-medium flex justify-between">
                     <span>Size</span>
                     <span className="text-purple-400">
-                      {textLayers.find(l => l.id === selectedLayer)?.fontSize}px
+                      {getLayerValue('fontSize') ?? 24}px
                     </span>
                   </label>
                   <input
                     type="range"
                     min="12"
                     max="200"
-                    value={textLayers.find(l => l.id === selectedLayer)?.fontSize}
-                    onChange={(e) => updateLayer(selectedLayer, { fontSize: Number(e.target.value) })}
+                    value={getLayerValue('fontSize') ?? 24}
+                    onChange={(e) => updateLayer(selectedLayer!, { fontSize: Number(e.target.value) })}
                     className="w-full accent-purple-500"
                   />
                 </div>
@@ -307,7 +318,7 @@ export default function ImageEditor() {
                   <label className="block text-gray-300 mb-2 text-sm font-medium flex justify-between">
                     <span>Opacity</span>
                     <span className="text-purple-400">
-                      {Math.round(textLayers.find(l => l.id === selectedLayer)?.opacity * 100)}%
+                      {Math.round((getLayerValue('opacity') as number || 1) * 100)}%
                     </span>
                   </label>
                   <input
@@ -315,8 +326,8 @@ export default function ImageEditor() {
                     min="0"
                     max="1"
                     step="0.01"
-                    value={textLayers.find(l => l.id === selectedLayer)?.opacity}
-                    onChange={(e) => updateLayer(selectedLayer, { opacity: Number(e.target.value) })}
+                    value={getLayerValue('opacity') ?? 1}
+                    onChange={(e) => updateLayer(selectedLayer!, { opacity: Number(e.target.value) })}
                     className="w-full accent-purple-500"
                   />
                 </div>
@@ -326,7 +337,7 @@ export default function ImageEditor() {
                   <label className="block text-gray-300 mb-2 text-sm font-medium flex justify-between">
                     <span>Weight</span>
                     <span className="text-purple-400">
-                      {textLayers.find(l => l.id === selectedLayer)?.weight}
+                      {getLayerValue('weight') ?? 400}
                     </span>
                   </label>
                   <input
@@ -334,8 +345,8 @@ export default function ImageEditor() {
                     min="100"
                     max="900"
                     step="100"
-                    value={textLayers.find(l => l.id === selectedLayer)?.weight}
-                    onChange={(e) => updateLayer(selectedLayer, { weight: Number(e.target.value) })}
+                    value={getLayerValue('weight') ?? 400}
+                    onChange={(e) => updateLayer(selectedLayer!, { weight: Number(e.target.value) })}
                     className="w-full accent-purple-500"
                   />
                 </div>
@@ -345,15 +356,15 @@ export default function ImageEditor() {
                   <label className="block text-gray-300 mb-2 text-sm font-medium flex justify-between">
                     <span>Rotation</span>
                     <span className="text-purple-400">
-                      {textLayers.find(l => l.id === selectedLayer)?.rotation}°
+                      {getLayerValue('rotation') ?? 0}°
                     </span>
                   </label>
                   <input
                     type="range"
                     min="0"
                     max="360"
-                    value={textLayers.find(l => l.id === selectedLayer)?.rotation}
-                    onChange={(e) => updateLayer(selectedLayer, { rotation: Number(e.target.value) })}
+                    value={getLayerValue('rotation') ?? 0}
+                    onChange={(e) => updateLayer(selectedLayer!, { rotation: Number(e.target.value) })}
                     className="w-full accent-purple-500"
                   />
                 </div>
